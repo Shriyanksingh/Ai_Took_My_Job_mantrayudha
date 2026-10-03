@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "NovaMartDecision",
+  "type": "object",
+  "required": ["decision", "reason", "evidence", "policy", "actions", "dependencies"],
+  "properties": {
+    "decision": {"enum": ["ANSWER", "ASK", "ACT", "ESCALATE"]},
+    "reason": {"type": "string"},
+    "evidence": {"type": "object"},
+    "policy": {"type": "object"},
+    "actions": {"type": "array"},
+    "dependencies": {"type": "array", "items": {"type": "string"}}
+  },
+  "additionalProperties": false
+}

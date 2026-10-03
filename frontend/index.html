@@ -1,0 +1,1507 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>NovaMart Guardian</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #09090c;
+      --sidebar: #101015;
+      --card: #15151c;
+      --card-hover: #1b1b24;
+      --card-border: #232330;
+      --border-subtle: #1c1c24;
+      --text-main: #f4f4f7;
+      --text-muted: #8b8a99;
+      --text-subtle: #5a5968;
+      --red: #ef242b;
+      --red-dim: rgba(239, 36, 43, 0.15);
+      --red-border: rgba(239, 36, 43, 0.35);
+      --green: #2ecc71;
+      --green-dim: rgba(46, 204, 113, 0.15);
+      --amber: #f39c12;
+      --amber-dim: rgba(243, 156, 18, 0.15);
+      --blue: #3498db;
+      --blue-dim: rgba(52, 152, 219, 0.15);
+      --purple: #9b59b6;
+      --radius: 12px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text-main);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      height: 100vh;
+      overflow: hidden;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    
+    /* Layout */
+    .app-layout {
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      background: var(--sidebar);
+      border-right: 1px solid var(--border-subtle);
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
+    .sidebar-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(16, 16, 21, 0.7);
+      backdrop-filter: blur(10px);
+    }
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .brand-logo {
+      width: 14px;
+      height: 14px;
+      background: var(--red);
+      transform: rotate(45deg);
+      box-shadow: 0 0 16px var(--red);
+      border-radius: 2px;
+    }
+    .brand-title {
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      color: #fff;
+    }
+    .brand-badge {
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--red);
+      background: var(--red-dim);
+      padding: 2px 6px;
+      border-radius: 4px;
+      border: 1px solid var(--red-border);
+    }
+
+    .sidebar-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .sidebar-content::-webkit-scrollbar { width: 5px; }
+    .sidebar-content::-webkit-scrollbar-thumb { background: #262633; border-radius: 4px; }
+
+    /* Customer Selector */
+    .field-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .select-wrap select {
+      width: 100%;
+      background: var(--card);
+      color: var(--text-main);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 13px;
+      font-weight: 500;
+      outline: none;
+      transition: border-color 0.2s;
+      cursor: pointer;
+    }
+    .select-wrap select:focus {
+      border-color: var(--red);
+    }
+
+    /* Customer Profile Card */
+    .customer-card {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 14px;
+      transition: all 0.2s ease;
+    }
+    .cust-card-top {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .cust-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #2b1419, #4a131b);
+      border: 1px solid var(--red-border);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+    .cust-identity h3 {
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 2px;
+    }
+    .cust-chips {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+    .badge {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .badge-tier-bronze { background: #3d2919; color: #e69d67; border: 1px solid #754422; }
+    .badge-tier-silver { background: #262933; color: #c4ccdf; border: 1px solid #4a5168; }
+    .badge-tier-gold { background: #3b3215; color: #ffd666; border: 1px solid #806822; }
+    .badge-tier-platinum { background: #2e1a38; color: #e599f7; border: 1px solid #6b3582; }
+    .badge-active { background: var(--green-dim); color: var(--green); border: 1px solid rgba(46, 204, 113, 0.3); }
+
+    .cust-meta-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      padding-top: 10px;
+      border-top: 1px solid var(--border-subtle);
+    }
+    .cust-meta-item {
+      font-size: 11px;
+    }
+    .cust-meta-item .lbl {
+      color: var(--text-muted);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .cust-meta-item .val {
+      font-weight: 600;
+      color: #dedee6;
+      margin-top: 1px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Tabs in Sidebar */
+    .tab-nav {
+      display: flex;
+      background: #0d0d12;
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 3px;
+      gap: 2px;
+    }
+    .tab-btn {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 7px 0;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .tab-btn.active {
+      background: var(--card);
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    }
+    .tab-pane {
+      display: none;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .tab-pane.active {
+      display: flex;
+    }
+
+    /* Orders list */
+    .order-card {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 10px 12px;
+      transition: border-color 0.2s;
+      cursor: pointer;
+    }
+    .order-card:hover {
+      border-color: #3b3a4a;
+      background: var(--card-hover);
+    }
+    .order-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 5px;
+    }
+    .order-id {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 12px;
+      color: #fff;
+    }
+    .status-pill {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+    .status-delivered { background: var(--green-dim); color: var(--green); }
+    .status-shipped { background: var(--blue-dim); color: var(--blue); }
+    .status-processing, .status-placed { background: var(--amber-dim); color: var(--amber); }
+    .status-cancelled { background: var(--red-dim); color: var(--red); }
+    
+    .order-card-info {
+      font-size: 11px;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+    }
+    .order-amount {
+      font-weight: 700;
+      color: #fff;
+    }
+
+    /* Scenarios list */
+    .scenario-item {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 9px 11px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .scenario-item:hover {
+      border-color: var(--red);
+      background: var(--card-hover);
+      transform: translateX(2px);
+    }
+    .scenario-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 3px;
+    }
+    .scenario-title {
+      font-weight: 700;
+      font-size: 12px;
+      color: #fff;
+    }
+    .scenario-badge {
+      font-size: 9px;
+      font-weight: 800;
+      padding: 1px 5px;
+      border-radius: 3px;
+    }
+    .scenario-text {
+      font-size: 11px;
+      color: var(--text-muted);
+      line-height: 1.35;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    /* Sidebar Footer */
+    .sidebar-footer {
+      padding: 12px 16px;
+      border-top: 1px solid var(--border-subtle);
+      background: #0d0d12;
+      font-size: 11px;
+    }
+    .gemini-status-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--text-muted);
+    }
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+      display: inline-block;
+      margin-right: 6px;
+      box-shadow: 0 0 8px var(--green);
+    }
+    .gemini-config-box {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px dashed var(--border-subtle);
+      display: none;
+    }
+    .gemini-config-box.open {
+      display: block;
+    }
+    .key-input-row {
+      display: flex;
+      gap: 6px;
+      margin-top: 6px;
+    }
+    .mini-input {
+      flex: 1;
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 6px;
+      color: #fff;
+      padding: 6px 8px;
+      font-size: 11px;
+      outline: none;
+    }
+    .mini-input:focus { border-color: var(--red); }
+    .mini-btn {
+      background: var(--red);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-weight: 700;
+      font-size: 11px;
+      cursor: pointer;
+    }
+
+    /* Main Chat Section */
+    .chat-main {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      background: radial-gradient(circle at 85% 15%, rgba(182, 19, 31, 0.08), transparent 40%), var(--bg);
+      position: relative;
+    }
+
+    /* Chat Header */
+    .chat-header {
+      padding: 14px 28px;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(9, 9, 12, 0.85);
+      backdrop-filter: blur(12px);
+      z-index: 10;
+    }
+    .chat-header-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .chat-header-title h2 {
+      font-size: 16px;
+      font-weight: 700;
+      color: #fff;
+    }
+    .chat-header-title .sub {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .chat-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .decision-pill {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      padding: 4px 10px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      border: 1px solid currentColor;
+    }
+    .decision-pill.answer { color: #8dd4ff; background: rgba(52, 152, 219, 0.1); }
+    .decision-pill.ask { color: var(--amber); background: var(--amber-dim); }
+    .decision-pill.act { color: var(--green); background: var(--green-dim); }
+    .decision-pill.escalate { color: #ff6870; background: var(--red-dim); }
+    .decision-pill.waiting { color: var(--text-muted); border-color: var(--text-subtle); }
+
+    .icon-btn {
+      background: transparent;
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .icon-btn:hover {
+      color: #fff;
+      border-color: #4a4a58;
+      background: var(--card);
+    }
+
+    /* Chat Messages */
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .chat-messages::-webkit-scrollbar { width: 6px; }
+    .chat-messages::-webkit-scrollbar-thumb { background: #262633; border-radius: 4px; }
+
+    /* Welcome Banner */
+    .welcome-banner {
+      text-align: center;
+      max-width: 580px;
+      margin: 40px auto 20px;
+      padding: 24px;
+      background: linear-gradient(180deg, rgba(21, 21, 28, 0.8), rgba(16, 16, 21, 0.4));
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+    }
+    .welcome-banner .brand-icon-big {
+      width: 24px;
+      height: 24px;
+      background: var(--red);
+      transform: rotate(45deg);
+      margin: 0 auto 16px;
+      box-shadow: 0 0 24px var(--red);
+    }
+    .welcome-banner h1 {
+      font-size: 20px;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+    .welcome-banner p {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+    .welcome-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin-top: 16px;
+    }
+    .welcome-chip {
+      background: #1b1b24;
+      border: 1px solid #2e2e3d;
+      color: #ddd;
+      font-size: 11px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .welcome-chip:hover {
+      border-color: var(--red);
+      color: #fff;
+      background: #252532;
+    }
+
+    /* Message Bubbles */
+    .msg-row {
+      display: flex;
+      gap: 12px;
+      max-width: 820px;
+      animation: fadeIn 0.2s ease forwards;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .msg-user {
+      align-self: flex-end;
+      flex-direction: row-reverse;
+    }
+    .msg-agent {
+      align-self: flex-start;
+    }
+    
+    .msg-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 11px;
+      flex-shrink: 0;
+    }
+    .msg-user .msg-avatar {
+      background: linear-gradient(135deg, #1b2838, #2a3f5a);
+      color: #7bc0ff;
+      border: 1px solid rgba(123, 192, 255, 0.3);
+    }
+    .msg-agent .msg-avatar {
+      background: linear-gradient(135deg, #381116, #59161e);
+      color: #ff8589;
+      border: 1px solid var(--red-border);
+    }
+
+    .msg-bubble {
+      padding: 14px 18px;
+      border-radius: 14px;
+      font-size: 13.5px;
+      line-height: 1.6;
+      position: relative;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .msg-user .msg-bubble {
+      background: linear-gradient(135deg, #1c151c, #261622);
+      border: 1px solid #4a2842;
+      color: #f7f7fc;
+      border-bottom-right-radius: 4px;
+    }
+    .msg-agent .msg-bubble {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      color: #e6e5ec;
+      border-bottom-left-radius: 4px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+    }
+    .msg-chip-btn {
+      background: #1a1a24;
+      color: #8da4be;
+      border: 1px solid #2e2e40;
+      padding: 5px 11px;
+      border-radius: 6px;
+      font-size: 11.5px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.2s;
+    }
+    .msg-chip-btn:hover {
+      background: #252538;
+      color: #fff;
+      border-color: #43435c;
+    }
+    .order-action-chips {
+      display: flex;
+      gap: 5px;
+      margin-top: 8px;
+    }
+    .order-action-btn {
+      background: #1b1b26;
+      border: 1px solid #28283a;
+      color: var(--text-muted);
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 7px;
+      border-radius: 4px;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      transition: all 0.15s;
+    }
+    .order-action-btn:hover {
+      background: #28283c;
+      color: #fff;
+      border-color: var(--red);
+    }
+
+    .msg-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+    .msg-sender {
+      font-weight: 700;
+      font-size: 12px;
+      color: #fff;
+    }
+    .msg-time {
+      font-size: 10px;
+      color: var(--text-subtle);
+    }
+
+    /* Inspection accordion in Agent response */
+    .inspection-toggle {
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px solid #232330;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      color: var(--text-muted);
+      font-size: 11px;
+      font-weight: 600;
+      user-select: none;
+    }
+    .inspection-toggle:hover {
+      color: #fff;
+    }
+    .inspection-drawer {
+      margin-top: 10px;
+      background: #0d0d12;
+      border: 1px solid #20202c;
+      border-radius: 8px;
+      padding: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      display: none;
+    }
+    .inspection-drawer.open {
+      display: block;
+    }
+    .inspect-section {
+      margin-bottom: 8px;
+    }
+    .inspect-title {
+      color: var(--red);
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 10px;
+      letter-spacing: 0.05em;
+      margin-bottom: 3px;
+    }
+    .inspect-trace-list {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      max-height: 180px;
+      overflow-y: auto;
+    }
+    .inspect-trace-item {
+      padding: 4px 6px;
+      background: #14141a;
+      border-radius: 4px;
+      border-left: 2px solid var(--red);
+      font-size: 10.5px;
+      color: #c9c8d4;
+    }
+
+    /* Loading indicator */
+    .typing-indicator {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 10px 14px;
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      width: fit-content;
+    }
+    .typing-indicator span {
+      width: 6px;
+      height: 6px;
+      background: var(--red);
+      border-radius: 50%;
+      animation: bounce 1.2s infinite ease-in-out both;
+    }
+    .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+    .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
+    @keyframes bounce {
+      0%, 80%, 100% { transform: scale(0); opacity: 0.3; }
+      40% { transform: scale(1); opacity: 1; }
+    }
+
+    /* Bottom Chat Input */
+    .chat-bottom {
+      padding: 16px 28px 20px;
+      background: rgba(9, 9, 12, 0.95);
+      border-top: 1px solid var(--border-subtle);
+      backdrop-filter: blur(12px);
+    }
+    .input-box {
+      background: #14141b;
+      border: 1px solid #2b2b38;
+      border-radius: 14px;
+      padding: 8px 12px 8px 16px;
+      display: flex;
+      align-items: flex-end;
+      gap: 10px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .input-box:focus-within {
+      border-color: var(--red);
+      box-shadow: 0 0 0 2px var(--red-dim);
+    }
+    .input-box textarea {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-family: inherit;
+      font-size: 14px;
+      resize: none;
+      outline: none;
+      max-height: 140px;
+      min-height: 24px;
+      line-height: 1.5;
+      padding: 4px 0;
+    }
+    .input-box textarea::placeholder {
+      color: var(--text-subtle);
+    }
+    .input-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-bottom: 2px;
+    }
+    .gemini-pill-toggle {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      user-select: none;
+      padding: 4px 8px;
+      border-radius: 6px;
+      border: 1px solid var(--border-subtle);
+      transition: all 0.15s;
+    }
+    .gemini-pill-toggle:hover {
+      border-color: #3b3a4a;
+      color: #fff;
+    }
+    .gemini-pill-toggle input {
+      accent-color: var(--red);
+      cursor: pointer;
+    }
+
+    .send-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: var(--red);
+      border: none;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s;
+      flex-shrink: 0;
+    }
+    .send-btn:hover:not(:disabled) {
+      background: #ff333a;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(239, 36, 43, 0.4);
+    }
+    .send-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .input-hint-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--text-subtle);
+      margin-top: 8px;
+      padding: 0 4px;
+    }
+    .kbd {
+      background: #1b1b24;
+      border: 1px solid #30303e;
+      border-radius: 4px;
+      padding: 1px 5px;
+      font-family: inherit;
+      color: #b5b4c4;
+      font-size: 10px;
+    }
+
+    @media (max-width: 900px) {
+      .app-layout {
+        grid-template-columns: 1fr;
+      }
+      .sidebar {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-layout">
+    
+    <!-- SIDE MENU BAR: Customer Information & Context -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="brand-wrap">
+          <div class="brand-logo"></div>
+          <div>
+            <div class="brand-title">NOVAMART GUARDIAN</div>
+          </div>
+        </div>
+        <div class="brand-badge">VERIFIED</div>
+      </div>
+
+      <div class="sidebar-content">
+        <!-- Customer Selector -->
+        <div>
+          <div class="field-label">
+            <span>Customer Profile</span>
+            <span id="customersCountLabel" style="font-size:10px;color:var(--text-subtle)">Loading...</span>
+          </div>
+          <div class="select-wrap">
+            <select id="customerSelect" onchange="onCustomerSelected(this.value)">
+              <option value="">Loading customer records...</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Customer Identity Card -->
+        <div class="customer-card" id="custCard">
+          <div class="cust-card-top">
+            <div class="cust-avatar" id="custAvatar">--</div>
+            <div class="cust-identity">
+              <h3 id="custName">Selecting Customer...</h3>
+              <div class="cust-chips">
+                <span class="badge badge-tier-bronze" id="custTierBadge">BRONZE</span>
+                <span class="badge badge-active" id="custStatusBadge">ACTIVE</span>
+              </div>
+            </div>
+          </div>
+          <div class="cust-meta-grid">
+            <div class="cust-meta-item">
+              <div class="lbl">Customer ID</div>
+              <div class="val" id="custIdVal">-</div>
+            </div>
+            <div class="cust-meta-item">
+              <div class="lbl">City / Region</div>
+              <div class="val" id="custCityVal">-</div>
+            </div>
+            <div class="cust-meta-item">
+              <div class="lbl">Language</div>
+              <div class="val" id="custLangVal">-</div>
+            </div>
+            <div class="cust-meta-item">
+              <div class="lbl">Total Spend</div>
+              <div class="val" id="custSpendVal">-</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tabs: Orders, Tickets, Quick Prompts -->
+        <div class="tab-nav">
+          <button class="tab-btn active" onclick="setTab('orders')">Orders (<span id="ordersCount">0</span>)</button>
+          <button class="tab-btn" onclick="setTab('tickets')">Tickets (<span id="ticketsCount">0</span>)</button>
+          <button class="tab-btn" onclick="setTab('prompts')">Prompts</button>
+        </div>
+
+        <!-- Tab Panes -->
+        <div id="tab-orders" class="tab-pane active">
+          <div id="ordersList" style="display:flex;flex-direction:column;gap:8px;"></div>
+        </div>
+
+        <div id="tab-tickets" class="tab-pane">
+          <div id="ticketsList" style="display:flex;flex-direction:column;gap:8px;"></div>
+        </div>
+
+        <div id="tab-prompts" class="tab-pane">
+          <div id="promptsList" style="display:flex;flex-direction:column;gap:8px;"></div>
+        </div>
+      </div>
+
+      <!-- Sidebar Footer / Gemini Settings -->
+      <div class="sidebar-footer">
+        <div class="gemini-status-bar">
+          <div>
+            <span class="dot" id="geminiDot"></span>
+            <span id="geminiStatusLabel">Gemini AI: Ready</span>
+          </div>
+          <button class="icon-btn" style="width:24px;height:24px;font-size:11px;" onclick="toggleGeminiDrawer()" title="Configure Gemini API">⚙️</button>
+        </div>
+        <div class="gemini-config-box" id="geminiDrawer">
+          <div class="field-label" style="margin-bottom:4px;">Google Gemini API Key</div>
+          <div class="key-input-row">
+            <input type="password" id="geminiKeyInput" placeholder="Paste free Gemini API key..." class="mini-input" />
+            <button class="mini-btn" onclick="saveGeminiKey()">Save</button>
+          </div>
+          <div style="margin-top:6px;font-size:10px;display:flex;justify-content:space-between;">
+            <a href="https://aistudio.google.com/" target="_blank" style="color:var(--amber);text-decoration:none;">Get free API key ↗</a>
+            <span id="geminiSavedNotice" style="color:var(--green);display:none;">Saved!</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN CHAT INTERFACE -->
+    <main class="chat-main">
+      <!-- Header -->
+      <header class="chat-header">
+        <div class="chat-header-title">
+          <div class="brand-logo" style="width:10px;height:10px;"></div>
+          <div>
+            <h2 id="chatActiveName">NovaMart Support Session</h2>
+            <div class="sub" id="chatActiveSub">Verification-first policy engine active</div>
+          </div>
+        </div>
+        <div class="chat-header-actions">
+          <span class="decision-pill waiting" id="chatDecisionPill">READY</span>
+          <button class="icon-btn" onclick="clearMessages()" title="Clear conversation">🗑️</button>
+          <button class="icon-btn" onclick="resetRuntime()" title="Reset write state">🔄</button>
+        </div>
+      </header>
+
+      <!-- Message History -->
+      <div class="chat-messages" id="chatMessages">
+        <div class="welcome-banner" id="welcomeBanner">
+          <div class="brand-icon-big"></div>
+          <h1>How can NovaMart Guardian help?</h1>
+          <p>This agent combines verified database facts with versioned store policies. Every customer claim is verified before taking any action.</p>
+          <div class="welcome-chips" id="welcomeChips"></div>
+        </div>
+      </div>
+
+      <!-- Bottom Chat Dock -->
+      <footer class="chat-bottom">
+        <div class="input-box">
+          <textarea
+            id="chatInput"
+            placeholder="Type customer message or inquiry... (Press Enter to send)"
+            rows="1"
+          ></textarea>
+          <div class="input-controls">
+            <label class="gemini-pill-toggle" title="Toggle fluent response enhancement via free Google Gemini API">
+              <input type="checkbox" id="geminiToggle" checked />
+              <span>Gemini AI</span>
+            </label>
+            <button id="sendBtn" class="send-btn" onclick="submitMessage()" title="Send (Enter)">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="22" y1="2" x2="11" y2="13"></line>
+                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div class="input-hint-row">
+          <span>Press <span class="kbd">Enter</span> to submit • <span class="kbd">Shift</span> + <span class="kbd">Enter</span> for new line</span>
+          <span>Proof-carrying actions • Terminal decisions: ANSWER / ASK / ACT / ESCALATE</span>
+        </div>
+      </footer>
+    </main>
+
+  </div>
+
+  <script>
+    const $ = id => document.getElementById(id);
+    let currentCustomer = null;
+    let currentCustomerDetails = null;
+    let customerList = [];
+    let exampleScenarios = [];
+    let isSubmitting = false;
+
+    async function api(url, opts) {
+      const res = await fetch(url, opts);
+      if (!res.ok) throw new Error(await res.text());
+      return res.json();
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str).replace(/[&<>'"]/g, tag => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        "'": '&#39;',
+        '"': '&quot;'
+      }[tag] || tag));
+    }
+
+    function formatBotMessage(text) {
+      if (!text) return 'No response returned.';
+      let html = escapeHtml(text);
+      // Format markdown bold **text**
+      html = html.replace(/\*\*(.+?)\*\*/g, '<strong style="color:#fff;">$1</strong>');
+      // Format markdown code `text`
+      html = html.replace(/`([^`]+?)`/g, '<code style="background:#20202e;padding:2px 5px;border-radius:4px;font-size:12px;color:#a5d8ff;border:1px solid #2e2e42;">$1</code>');
+      return html;
+    }
+
+    function formatCurrency(amount) {
+      const num = parseFloat(amount || 0);
+      return '₹' + num.toLocaleString('en-IN');
+    }
+
+    // Initialize application
+    async function init() {
+      try {
+        // Load Health & Gemini status
+        const health = await api('/api/health');
+        updateGeminiStatus(health);
+
+        // Load Customers
+        customerList = await api('/api/customers?limit=100');
+        $('customersCountLabel').textContent = `${customerList.length} loaded`;
+        $('customerSelect').innerHTML = customerList.map(c => 
+          `<option value="${c.customer_id}">${c.customer_id} - ${c.first_name} ${c.last_name} (${(c.loyalty_tier || 'bronze').toUpperCase()})</option>`
+        ).join('');
+
+        // Load Examples
+        exampleScenarios = await api('/api/examples');
+        renderScenarios();
+        renderWelcomeChips();
+
+        // Select first customer
+        if (customerList.length > 0) {
+          await loadCustomer(customerList[0].customer_id);
+        }
+      } catch (err) {
+        console.error('Initialization error:', err);
+      }
+    }
+
+    function updateGeminiStatus(health) {
+      const configured = health && health.llm_configured;
+      const model = (health && health.llm_model) || 'gemini-1.5-flash';
+      $('geminiStatusLabel').textContent = configured ? `Gemini Active (${model})` : 'Gemini Free Tier (Ready)';
+      $('geminiDot').style.background = configured ? 'var(--green)' : 'var(--amber)';
+      $('geminiDot').style.boxShadow = configured ? '0 0 8px var(--green)' : '0 0 8px var(--amber)';
+    }
+
+    async function loadCustomer(customerId) {
+      try {
+        const details = await api(`/api/customer/${customerId}`);
+        currentCustomer = details.customer;
+        currentCustomerDetails = details;
+
+        // Update profile card
+        const c = currentCustomer;
+        const initials = ((c.first_name || '')[0] || '') + ((c.last_name || '')[0] || '');
+        $('custAvatar').textContent = initials.toUpperCase() || 'CU';
+        $('custName').textContent = `${c.first_name} ${c.last_name}`;
+        $('custIdVal').textContent = c.customer_id;
+        $('custCityVal').textContent = `${c.city || '-'}, ${c.state || ''}`;
+        $('custLangVal').textContent = c.preferred_language || 'English';
+        $('custSpendVal').textContent = formatCurrency(c.total_spend);
+
+        // Badges
+        const tier = (c.loyalty_tier || 'bronze').toLowerCase();
+        $('custTierBadge').className = `badge badge-tier-${tier}`;
+        $('custTierBadge').textContent = tier.toUpperCase();
+
+        const status = (c.account_status || 'active').toLowerCase();
+        $('custStatusBadge').className = `badge ${status === 'active' ? 'badge-active' : 'badge-tier-silver'}`;
+        $('custStatusBadge').textContent = status.toUpperCase();
+
+        // Header sync
+        $('chatActiveName').textContent = `${c.first_name} ${c.last_name} (${c.customer_id})`;
+        $('chatActiveSub').textContent = `${c.city || 'India'} • ${tier.toUpperCase()} Member • ${c.total_orders || 0} Orders`;
+
+        // Update Orders list
+        renderOrders(details.orders || []);
+        renderTickets(details.tickets || []);
+      } catch (err) {
+        console.error('Failed to load customer details:', err);
+      }
+    }
+
+    function onCustomerSelected(customerId) {
+      if (!customerId) return;
+      loadCustomer(customerId);
+      appendSystemNotice(`Switched customer context to ${$('customerSelect').options[$('customerSelect').selectedIndex].text}`);
+    }
+
+    function renderOrders(orders) {
+      $('ordersCount').textContent = orders.length;
+      if (!orders.length) {
+        $('ordersList').innerHTML = '<div style="font-size:12px;color:var(--text-subtle);text-align:center;padding:16px;">No orders found for this customer.</div>';
+        return;
+      }
+      $('ordersList').innerHTML = orders.map(o => {
+        const st = (o.order_status || 'processing').toLowerCase();
+        return `
+          <div class="order-card" onclick="insertPrompt('What is the status of my order ${o.order_id}?')">
+            <div class="order-card-top">
+              <span class="order-id">${o.order_id}</span>
+              <span class="status-pill status-${st}">${st}</span>
+            </div>
+            <div class="order-card-info">
+              <span>${(o.order_date || '').split(' ')[0]}</span>
+              <span class="order-amount">${formatCurrency(o.total_amount)}</span>
+            </div>
+            <div class="order-action-chips" onclick="event.stopPropagation()">
+              <button class="order-action-btn" onclick="insertPrompt('What is the status of my order ${o.order_id}?')">Status</button>
+              <button class="order-action-btn" onclick="insertPrompt('Download tax invoice for ${o.order_id}')">Invoice</button>
+              <button class="order-action-btn" onclick="insertPrompt('I want to return order ${o.order_id}')">Return</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderTickets(tickets) {
+      $('ticketsCount').textContent = tickets.length;
+      if (!tickets.length) {
+        $('ticketsList').innerHTML = '<div style="font-size:12px;color:var(--text-subtle);text-align:center;padding:16px;">No support tickets on record.</div>';
+        return;
+      }
+      $('ticketsList').innerHTML = tickets.map(t => `
+        <div class="order-card">
+          <div class="order-card-top">
+            <span class="order-id">${t.ticket_id || 'TCK'}</span>
+            <span class="status-pill status-${(t.status || 'open').toLowerCase()}">${t.status || 'OPEN'}</span>
+          </div>
+          <div style="font-size:11px;color:#dedee6;margin-top:2px;">${escapeHtml(t.subject || t.issue_type || 'Support Request')}</div>
+          <div class="order-card-info" style="margin-top:4px;">
+            <span>Priority: ${(t.priority || 'medium').toUpperCase()}</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderScenarios() {
+      $('promptsList').innerHTML = exampleScenarios.map((e, idx) => `
+        <div class="scenario-item" onclick="useScenario(${idx})">
+          <div class="scenario-header">
+            <span class="scenario-title">${escapeHtml(e.title)}</span>
+            <span class="decision-pill ${e.category.toLowerCase().split('/')[0]}" style="font-size:9px;padding:1px 5px;">${e.category}</span>
+          </div>
+          <div class="scenario-text">${escapeHtml(e.message)}</div>
+        </div>
+      `).join('');
+    }
+
+    function renderWelcomeChips() {
+      const top3 = exampleScenarios.slice(0, 4);
+      $('welcomeChips').innerHTML = top3.map((e, idx) => `
+        <button class="welcome-chip" onclick="useScenario(${idx})">${escapeHtml(e.title)}</button>
+      `).join('');
+    }
+
+    function useScenario(idx) {
+      const e = exampleScenarios[idx];
+      if (!e) return;
+      if (e.customer_id && e.customer_id !== $('customerSelect').value) {
+        $('customerSelect').value = e.customer_id;
+        loadCustomer(e.customer_id);
+      }
+      $('chatInput').value = e.message;
+      $('chatInput').focus();
+      autoGrowTextarea();
+    }
+
+    function insertPrompt(text) {
+      $('chatInput').value = text;
+      $('chatInput').focus();
+      autoGrowTextarea();
+    }
+
+    function setTab(tab) {
+      document.querySelectorAll('.tab-btn').forEach((b, i) => {
+        b.classList.toggle('active', ['orders', 'tickets', 'prompts'][i] === tab);
+      });
+      $('tab-orders').classList.toggle('active', tab === 'orders');
+      $('tab-tickets').classList.toggle('active', tab === 'tickets');
+      $('tab-prompts').classList.toggle('active', tab === 'prompts');
+    }
+
+    function toggleGeminiDrawer() {
+      $('geminiDrawer').classList.toggle('open');
+    }
+
+    async function saveGeminiKey() {
+      const key = $('geminiKeyInput').value.trim();
+      if (!key) { alert('Please enter a valid key'); return; }
+      try {
+        const res = await api('/api/gemini/config', {
+          method: 'POST',
+          headers: {'Content-Type':'application/json'},
+          body: JSON.stringify({ api_key: key })
+        });
+        updateGeminiStatus(res);
+        $('geminiSavedNotice').style.display = 'inline';
+        setTimeout(() => { $('geminiSavedNotice').style.display = 'none'; }, 2500);
+      } catch (err) {
+        alert('Failed to save Gemini key: ' + err.message);
+      }
+    }
+
+    // Chat Message Handling
+    async function submitMessage() {
+      if (isSubmitting) return;
+      const text = $('chatInput').value.trim();
+      if (!text) return;
+
+      const customerId = $('customerSelect').value;
+      if (!customerId) {
+        alert('Please select a customer first.');
+        return;
+      }
+
+      // Hide welcome banner on first interaction
+      if ($('welcomeBanner')) {
+        $('welcomeBanner').style.display = 'none';
+      }
+
+      // Append User message
+      appendUserMessage(text);
+      $('chatInput').value = '';
+      autoGrowTextarea();
+
+      // Show typing indicator
+      const typingEl = appendTypingIndicator();
+      scrollToBottom();
+
+      isSubmitting = true;
+      $('sendBtn').disabled = true;
+
+      try {
+        const useGemini = $('geminiToggle').checked;
+        const response = await api('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            customer_id: customerId,
+            message: text,
+            use_llm: useGemini
+          })
+        });
+
+        // Remove typing indicator
+        typingEl.remove();
+
+        // Append Agent response
+        appendAgentMessage(response);
+        updateDecisionPill(response.decision);
+      } catch (err) {
+        typingEl.remove();
+        appendErrorMessage(err.message || 'Error processing request.');
+      } finally {
+        isSubmitting = false;
+        $('sendBtn').disabled = false;
+        scrollToBottom();
+      }
+    }
+
+    function appendUserMessage(text) {
+      const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const initials = currentCustomer ? (((currentCustomer.first_name || '')[0] || '') + ((currentCustomer.last_name || '')[0] || '')).toUpperCase() : 'ME';
+      const div = document.createElement('div');
+      div.className = 'msg-row msg-user';
+      div.innerHTML = `
+        <div class="msg-avatar">${initials}</div>
+        <div class="msg-bubble">
+          <div class="msg-header">
+            <span class="msg-sender">${escapeHtml(currentCustomer ? currentCustomer.first_name : 'Customer')}</span>
+            <span class="msg-time">${time}</span>
+          </div>
+          <div>${escapeHtml(text)}</div>
+        </div>
+      `;
+      $('chatMessages').appendChild(div);
+    }
+
+    function appendAgentMessage(res) {
+      const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const decision = res.decision || 'ANSWER';
+      const decClass = decision.toLowerCase();
+      const div = document.createElement('div');
+      div.className = 'msg-row msg-agent';
+
+      const traceItems = (res.trace || []).map(t => `
+        <div class="inspect-trace-item">
+          <strong>${escapeHtml(t.stage || t.type || 'STEP')}${t.status ? ' / ' + t.status : ''}:</strong> 
+          ${escapeHtml(t.detail || t.name || '')}
+        </div>
+      `).join('');
+
+      const actions = [];
+      (res.intent_results || []).forEach(ir => {
+        (ir.actions || []).forEach(a => actions.push(a));
+      });
+
+      // Check if an order ID is present
+      let targetOid = (res.evidence && res.evidence.order_id) || null;
+      if (!targetOid && res.intents) {
+        for (const it of res.intents) {
+          if (it.order_id) { targetOid = it.order_id; break; }
+        }
+      }
+      if (!targetOid && res.customer_response) {
+        const m = res.customer_response.match(/ORD-\d{6}/);
+        if (m) targetOid = m[0];
+      }
+
+      const formattedResp = formatBotMessage(res.customer_response || 'No response returned.');
+      const actionChipsHtml = targetOid ? `
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;padding-top:10px;border-top:1px solid #232330;">
+          <button class="msg-chip-btn" onclick="insertPrompt('What is the status of my order ${targetOid}?')">📦 Track Order</button>
+          <button class="msg-chip-btn" onclick="insertPrompt('Download tax invoice for ${targetOid}')">🧾 Tax Invoice</button>
+          <button class="msg-chip-btn" onclick="insertPrompt('I want to return order ${targetOid}')">🔄 Return / Refund</button>
+          <button class="msg-chip-btn" onclick="insertPrompt('Connect me to human agent')">👨‍💼 Human Support</button>
+        </div>
+      ` : '';
+
+      div.innerHTML = `
+        <div class="msg-avatar">NG</div>
+        <div class="msg-bubble">
+          <div class="msg-header">
+            <span class="msg-sender">NovaMart Guardian</span>
+            <span class="decision-pill ${decClass}">${decision}</span>
+            <span class="msg-time">${time}</span>
+          </div>
+          <div style="font-size:13.5px;color:#f0eef5;">${formattedResp}</div>
+          ${actionChipsHtml}
+          
+          <div class="inspection-toggle" onclick="toggleInspection(this)">
+            <span>Evidence &amp; Trace (${(res.trace || []).length} steps, ${(res.intents || []).length} intents)</span>
+            <span>▼</span>
+          </div>
+          <div class="inspection-drawer">
+            <div class="inspect-section">
+              <div class="inspect-title">Applied Policy</div>
+              <div>${escapeHtml(JSON.stringify(res.policy || {}, null, 2))}</div>
+            </div>
+            ${actions.length ? `
+            <div class="inspect-section">
+              <div class="inspect-title">Executed Write Actions (${actions.length})</div>
+              <div style="color:var(--green)">${escapeHtml(JSON.stringify(actions, null, 2))}</div>
+            </div>` : ''}
+            <div class="inspect-section">
+              <div class="inspect-title">Execution Trace</div>
+              <div class="inspect-trace-list">${traceItems}</div>
+            </div>
+          </div>
+        </div>
+      `;
+      $('chatMessages').appendChild(div);
+    }
+
+    function appendSystemNotice(text) {
+      const div = document.createElement('div');
+      div.style.cssText = 'text-align:center;font-size:11px;color:var(--text-subtle);margin:8px auto;padding:4px 12px;background:#101017;border-radius:999px;border:1px solid #1f1f2a;width:fit-content;';
+      div.textContent = text;
+      $('chatMessages').appendChild(div);
+      scrollToBottom();
+    }
+
+    function appendErrorMessage(err) {
+      const div = document.createElement('div');
+      div.className = 'msg-row msg-agent';
+      div.innerHTML = `
+        <div class="msg-avatar" style="background:#4a1216;color:var(--red);">!</div>
+        <div class="msg-bubble" style="border-color:var(--red-border);background:#1a0f12;">
+          <div class="msg-header">
+            <span class="msg-sender" style="color:var(--red);">Execution Error</span>
+          </div>
+          <div>${escapeHtml(err)}</div>
+        </div>
+      `;
+      $('chatMessages').appendChild(div);
+    }
+
+    function appendTypingIndicator() {
+      const div = document.createElement('div');
+      div.className = 'msg-row msg-agent';
+      div.innerHTML = `
+        <div class="msg-avatar">NG</div>
+        <div class="typing-indicator">
+          <span></span><span></span><span></span>
+        </div>
+      `;
+      $('chatMessages').appendChild(div);
+      return div;
+    }
+
+    function toggleInspection(el) {
+      const drawer = el.nextElementSibling;
+      drawer.classList.toggle('open');
+      const arrow = el.querySelector('span:last-child');
+      if (arrow) arrow.textContent = drawer.classList.contains('open') ? '▲' : '▼';
+    }
+
+    function updateDecisionPill(decision) {
+      const pill = $('chatDecisionPill');
+      pill.className = `decision-pill ${(decision || 'waiting').toLowerCase()}`;
+      pill.textContent = decision || 'READY';
+    }
+
+    function clearMessages() {
+      $('chatMessages').innerHTML = `
+        <div class="welcome-banner" id="welcomeBanner">
+          <div class="brand-icon-big"></div>
+          <h1>How can NovaMart Guardian help?</h1>
+          <p>Conversation history cleared. Ask any question about orders, cancellations, returns, refunds, or product specs.</p>
+          <div class="welcome-chips" id="welcomeChips"></div>
+        </div>
+      `;
+      renderWelcomeChips();
+      updateDecisionPill('READY');
+    }
+
+    async function resetRuntime() {
+      try {
+        await api('/api/reset', { method: 'POST' });
+        appendSystemNotice('Runtime write actions and ledger state have been cleanly reset.');
+      } catch (err) {
+        alert('Reset failed: ' + err.message);
+      }
+    }
+
+    function scrollToBottom() {
+      $('chatMessages').scrollTop = $('chatMessages').scrollHeight;
+    }
+
+    function autoGrowTextarea() {
+      const el = $('chatInput');
+      el.style.height = 'auto';
+      el.style.height = Math.min(el.scrollHeight, 140) + 'px';
+    }
+
+    // Keyboard Enter Handling
+    $('chatInput').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        submitMessage();
+      }
+    });
+
+    $('chatInput').addEventListener('input', autoGrowTextarea);
+
+    // Boot
+    window.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>

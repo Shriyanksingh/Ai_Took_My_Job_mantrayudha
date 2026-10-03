@@ -1,0 +1,7 @@
+.venv
+__pycache__
+.pytest_cache
+report_render
+pdf_verify
+*.pyc
+.git
