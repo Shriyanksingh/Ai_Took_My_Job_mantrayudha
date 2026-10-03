@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="720" viewBox="0 0 1400 720">
+<rect width="1400" height="720" fill="#09090b"/>
+<g font-family="Arial, sans-serif" text-anchor="middle">
+<style>.b{fill:#121216;stroke:#7c1820;stroke-width:2}.h{fill:#ef242b;stroke:#ef242b}.t{fill:#f3eee8;font-size:20px;font-weight:700}.s{fill:#b9b5b2;font-size:14px}.a{fill:none;stroke:#a90f17;stroke-width:3;marker-end:url(#m)}</style>
+<defs><marker id="m" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#a90f17"/></marker></defs>
+<text x="700" y="42" class="t" font-size="28">NOVAMART GUARDIAN - VERIFICATION-FIRST AGENT</text>
+<rect x="560" y="65" width="280" height="55" rx="10" class="h"/><text x="700" y="99" class="t">CUSTOMER REQUEST</text>
+<rect x="545" y="150" width="310" height="70" rx="10" class="b"/><text x="700" y="180" class="t">INPUT FIREWALL</text><text x="700" y="202" class="s">untrusted input / safety / injection</text>
+<rect x="160" y="260" width="250" height="72" rx="10" class="b"/><text x="285" y="290" class="t">INTENT + CONTEXT</text><text x="285" y="312" class="s">intent graph / memory</text>
+<rect x="575" y="260" width="250" height="72" rx="10" class="b"/><text x="700" y="290" class="t">DATA TRUTH</text><text x="700" y="312" class="s">customer / order / product</text>
+<rect x="990" y="260" width="250" height="72" rx="10" class="b"/><text x="1115" y="290" class="t">POLICY ENGINE</text><text x="1115" y="312" class="s">versioned compiler + rules</text>
+<rect x="450" y="380" width="500" height="76" rx="10" class="h"/><text x="700" y="412" class="t">DECISION ENGINE</text><text x="700" y="435" fill="#fff" font-size="14">ANSWER / ASK / ACT / ESCALATE</text>
+<rect x="250" y="505" width="230" height="70" rx="10" class="b"/><text x="365" y="535" class="t">PROOF GUARD</text><text x="365" y="557" class="s">evidence required</text>
+<rect x="585" y="505" width="230" height="70" rx="10" class="b"/><text x="700" y="535" class="t">TOOLS</text><text x="700" y="557" class="s">read / write / escalate</text>
+<rect x="920" y="505" width="230" height="70" rx="10" class="b"/><text x="1035" y="535" class="t">POST-CONDITION</text><text x="1035" y="557" class="s">result verification</text>
+<rect x="560" y="625" width="280" height="55" rx="10" class="h"/><text x="700" y="658" class="t">CUSTOMER RESPONSE</text>
+<path d="M700 120 L700 150" class="a"/><path d="M650 220 L350 260" class="a"/><path d="M700 220 L700 260" class="a"/><path d="M750 220 L1100 260" class="a"/><path d="M285 332 L550 380" class="a"/><path d="M700 332 L700 380" class="a"/><path d="M1115 332 L850 380" class="a"/><path d="M575 456 L365 505" class="a"/><path d="M700 456 L700 505" class="a"/><path d="M825 456 L1035 505" class="a"/><path d="M700 575 L700 625" class="a"/>
+</g></svg>
